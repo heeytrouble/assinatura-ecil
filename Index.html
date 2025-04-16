@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerador de Assinatura Ecil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    .form-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      margin: 10px 0;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #004179;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #assinatura {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Gerador de Assinatura Ecil</h2>
+    <input type="text" id="nome" placeholder="Nome completo"><br>
+    <input type="email" id="email" placeholder="E-mail corporativo"><br>
+    <input type="tel" id="telefone" placeholder="Telefone corporativo"><br>
+    <button onclick="gerarAssinatura()">Criar assinatura</button>
+  </div>
+
+  <canvas id="assinatura" width="1588" height="458"></canvas>
+
+  <script>
+    function gerarAssinatura() {
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const telefone = document.getElementById('telefone').value;
+
+      const endereco1 = 'Rua São Tomé, 86 - 10° andar - Vila Olímpia';
+      const endereco2 = 'CEP: 04551-080 - São Paulo - SP';
+
+      const canvas = document.getElementById('assinatura');
+      const ctx = canvas.getContext('2d');
+
+      const base = new Image();
+      base.src = 'assinatura recortada.PNG'; // garanta que esse nome seja exato e o arquivo esteja no mesmo diretório
+
+      base.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(base, 0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#003366';
+
+        // Tamanho e estilo da fonte
+        ctx.font = 'bold 26px Arial';
+
+        // Nome (x=1436, y=137)
+        ctx.fillText(nome, 1436, 137);
+
+        // Email (x=1394, y=185)
+        ctx.font = '22px Arial';
+        ctx.fillText(email, 1394, 185);
+
+        // Telefone (x=1331, y=270)
+        ctx.fillText(telefone, 1331, 270);
+
+        // Endereço (x=1448, y=364)
+        ctx.fillText(endereco1, 1448, 364);
+
+        // CEP (x=1448, y=442) — mesmo alinhamento horizontal do endereço
+        ctx.fillText(endereco2, 1448, 442);
+
+        // Exibe o canvas no HTML (opcional)
+        canvas.style.display = 'block';
+
+        // Gera e baixa o arquivo
+        const link = document.createElement('a');
+        link.download = 'assinatura.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+    }
+  </script>
+</body>
+</html>
